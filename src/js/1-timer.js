@@ -14,7 +14,7 @@ flatpickr("#datetime-picker", {
       if (selectedDate <= new Date()) {
         iziToast.error({
           title: "Error",
-          message: "Something went wrong!",
+          message: "Please choose a date in the future",
           position: "topRight"
         });
         
@@ -25,25 +25,19 @@ flatpickr("#datetime-picker", {
       }
     }
 });
-
 function convertMs(ms) {
+  const second = 1000;
+  const minute = second * 60;
+  const hour = minute * 60;
+  const day = hour * 24;
 
-    const second = 1000;
-    const minute = second * 60;
-    const hour = minute * 60;
-    const day = hour * 24;
-  
-    
-    const days = Math.floor(ms / day);
-  
-    const hours = Math.floor((ms % day) / hour);
+  const days = String(Math.floor(ms / day)).padStart(2, "0");
+  const hours = String(Math.floor((ms % day) / hour)).padStart(2, "0");
+  const minutes = String(Math.floor(((ms % day) % hour) / minute)).padStart(2, "0");
+  const seconds = String(Math.floor((((ms % day) % hour) % minute) / second)).padStart(2, "0");
 
-    const minutes = Math.floor(((ms % day) % hour) / minute);
-   
-    const seconds = Math.floor((((ms % day) % hour) % minute) / second);
-  
-    return { days, hours, minutes, seconds };
-  }
+  return { days, hours, minutes, seconds };
+}
   
   console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
   console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
@@ -59,9 +53,9 @@ function addLeadingZero(value) {
 let timerInterval;
 const startButton = document.querySelector("[data-start]");
 const datePicker = document.querySelector("#datetime-picker");
-
-startButton.addEventListener("click", () => {
- const userSelectedDate = new Date(datePicker.value);
+let userSelectedDate;
+ startButton.addEventListener("click", () => {
+  userSelectedDate = new Date(datePicker.value);
   if (!userSelectedDate || userSelectedDate <= new Date()) return;
 
   startButton.disabled = true;
