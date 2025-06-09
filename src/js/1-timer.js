@@ -12,7 +12,12 @@ flatpickr("#datetime-picker", {
     onClose(selectedDates) {
       const selectedDate = selectedDates[0];
       if (selectedDate <= new Date()) {
-        window.alert("Please choose a date in the future");
+        iziToast.error({
+          title: "Error",
+          message: "Something went wrong!",
+          position: "topRight"
+        });
+        
         startButton.disabled = true;
       } else {
         userSelectedDate = selectedDate;
@@ -56,7 +61,7 @@ const startButton = document.querySelector("[data-start]");
 const datePicker = document.querySelector("#datetime-picker");
 
 startButton.addEventListener("click", () => {
-  const userSelectedDate = new Date(datePicker.value);
+ const userSelectedDate = new Date(datePicker.value);
   if (!userSelectedDate || userSelectedDate <= new Date()) return;
 
   startButton.disabled = true;
@@ -69,7 +74,7 @@ startButton.addEventListener("click", () => {
       clearInterval(timerInterval);
       updateTimer(0, 0, 0, 0);
       datePicker.disabled = false;
-      startButton.disabled = true;
+      startButton.disabled = false;
       return;
     }
 
@@ -89,14 +94,9 @@ iziToast.success({
     position: "topRight"
   });
   
-  iziToast.error({
-    title: "Error",
-    message: "Something went wrong!",
-    position: "topRight"
-  });
-  
   iziToast.info({
     title: "Info",
     message: "Here is some information.",
     position: "topRight"
   });
+
